@@ -121,10 +121,7 @@ def mixing_posterior_t(y, h):
 
     # print('a', posterior_kernel / np.sum(posterior_kernel))
     posterior_kernel = np.exp(log_posterior_kernel)
-    # print('b', posterior_kernel / np.sum(posterior_kernel))
-    posterior = posterior_kernel / np.sum(posterior_kernel)
-
-    return posterior
+    return posterior_kernel / np.sum(posterior_kernel)
 
 
 def draw_mixing_t(y, h):
@@ -132,9 +129,7 @@ def draw_mixing_t(y, h):
 
     variate = np.random.uniform()
     tmp = np.cumsum(posterior) > variate
-    sample = np.argmax(tmp)
-
-    return sample
+    return np.argmax(tmp)
 
 
 def draw_mixing_new(mod, states):
@@ -171,9 +166,7 @@ def mixing_posterior(mod, states):
 
     # Normalize to get the actual posterior probabilities
     tmp = logsumexp(posterior_kernel, axis=1)
-    posterior_probabilities = np.exp(posterior_kernel - tmp[:, None])
-
-    return posterior_probabilities
+    return np.exp(posterior_kernel - tmp[:, None])
 
 def draw_mixing(mod, states):
     posterior_probabilities = mixing_posterior(mod, states)
@@ -181,9 +174,7 @@ def draw_mixing(mod, states):
     # Draw from the posterior
     variates = np.random.uniform(size=mod.nobs)
     tmp = np.cumsum(posterior_probabilities, axis=1) > variates[:, None]
-    sample = np.argmax(tmp, axis=1)
-
-    return sample
+    return np.argmax(tmp, axis=1)
 
 
 def g(phi, states, mu, sigma2, prior_params=(20, 1.5)):
